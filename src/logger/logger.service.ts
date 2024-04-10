@@ -21,8 +21,3 @@ export class LoggerService {
     this.logger.warn(...args);
   }
 }
-
-// displayInstanceName: false,
-// displayLoggerName: false,
-// displayFilePath: "hidden",
-// displayfunctionName: false,

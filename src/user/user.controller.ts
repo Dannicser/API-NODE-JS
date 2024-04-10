@@ -1,12 +1,30 @@
+import { NextFunction, Request, Response } from "express";
 import { BaseController } from "../common/base.controller";
 import { LoggerService } from "../logger/logger.service";
 
 export class UserController extends BaseController {
   constructor(logger: LoggerService) {
-    super(logger);
+    super(logger); // если экстендим всегда вызываем
+
+    this.bindRoutes([
+      {
+        path: "/register",
+        method: "get",
+        func: this.register,
+      },
+      {
+        path: "/login",
+        method: "get",
+        func: this.login,
+      },
+    ]);
   }
 
-  login() {}
+  login(req: Request, res: Response, next: NextFunction) {
+    this.ok(res, "login");
+  }
 
-  register() {}
+  register(req: Request, res: Response, next: NextFunction) {
+    this.ok(res, "register");
+  }
 }

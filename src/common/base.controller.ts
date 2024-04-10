@@ -1,5 +1,5 @@
 import { LoggerService } from "../logger/logger.service";
-import { Router } from "express";
+import { Response, Router } from "express";
 import { IControllerRoute } from "./route.interface";
 
 export abstract class BaseController {
@@ -11,6 +11,15 @@ export abstract class BaseController {
 
   get router() {
     return this._router;
+  }
+
+  public send<T>(res: Response, code: number, message: T) {
+    res.type("application/json");
+    res.status(code).json(message);
+  }
+
+  public ok<T>(res: Response, message: T) {
+    this.send(res, 200, message);
   }
 
   protected bindRoutes(routes: IControllerRoute[]) {
