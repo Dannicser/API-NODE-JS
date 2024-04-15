@@ -6,9 +6,11 @@ import { TYPES } from "../types";
 import { ILogger } from "../logger/logger.interface";
 
 import "reflect-metadata";
+import { IUserController } from "./user.controller.interface";
 
 @injectable() // и тот класс от коротого экстендимся
-export class UserController extends BaseController {
+// сначала extends потом implements
+export class UserController extends BaseController implements IUserController {
   constructor(@inject(TYPES.ILogger) private loggerService: ILogger) {
     super(loggerService); // если экстендим всегда вызываем
 
