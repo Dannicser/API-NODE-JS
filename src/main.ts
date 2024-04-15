@@ -1,4 +1,4 @@
-import { Container } from "inversify";
+import { Container, ContainerModule, interfaces } from "inversify";
 import { App } from "./app";
 import { ExeptionFilters } from "./errors/exeption.filter";
 import { LoggerService } from "./logger/logger.service";
@@ -13,15 +13,24 @@ import "reflect-metadata";
 // const logger = new LoggerService();
 // const app = new App(logger, new UserController(logger), new ExeptionFilters(logger));
 
-const appContainer = new Container(); // коробка, где лежат биндинги символов на конкретные реализации
+// так можно объединять логические куски приложения
+export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
+  bind<ILogger>(TYPES.ILogger).to(LoggerService); // TYPES.ILogger отдат LoggerService при инжекте
+  bind<IExceptionFilter>(TYPES.ExeptionFilter).to(ExeptionFilters);
+  bind<UserController>(TYPES.UserController).to(UserController);
+  bind<App>(TYPES.App).to(App);
+});
 
-appContainer.bind<ILogger>(TYPES.ILogger).to(LoggerService); // TYPES.ILogger отдат LoggerService при инжекте
-appContainer.bind<IExceptionFilter>(TYPES.ExeptionFilter).to(ExeptionFilters);
-appContainer.bind<UserController>(TYPES.UserController).to(UserController);
-appContainer.bind<App>(TYPES.App).to(App);
+function bootstap() {
+  const appContainer = new Container(); // коробка, где лежат биндинги символов на конкретные реализации
 
-const app = appContainer.get<App>(TYPES.App);
+  appContainer.load(appBindings);
 
-app.init();
+  const app = appContainer.get<App>(TYPES.App);
 
-export { app, appContainer };
+  app.init();
+
+  return { app, appContainer };
+}
+
+export const { app, appContainer } = bootstap();
