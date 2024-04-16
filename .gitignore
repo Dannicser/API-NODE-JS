@@ -2,3 +2,4 @@
 /.git
 /dist
 /src/test.ts
+/.clinic

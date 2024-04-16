@@ -3,10 +3,10 @@ import { BaseController } from '../common/base.controller';
 import { HTTPError } from '../errors/http-error.class';
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../types';
+import { IUserController } from './user.controller.interface';
 import { ILogger } from '../logger/logger.interface';
 
 import 'reflect-metadata';
-import { IUserController } from './user.controller.interface';
 
 @injectable() // и тот класс от коротого экстендимся
 // сначала extends потом implements
