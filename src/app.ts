@@ -7,6 +7,8 @@ import { inject, injectable } from 'inversify';
 import { TYPES } from './types';
 import { IExceptionFilter } from './errors/exeption.filter.interface';
 
+import { json } from 'body-parser';
+
 import 'reflect-metadata';
 
 @injectable()
@@ -24,6 +26,10 @@ export class App {
 		this.port = 5000;
 	}
 
+	useMiddlawares(): void {
+		this.app.use(json());
+	}
+
 	useRoutes(): void {
 		this.app.use('/users', this.userController.router);
 	}
@@ -34,6 +40,7 @@ export class App {
 
 	public async init(): Promise<void> {
 		this.server = this.app.listen(this.port);
+		this.useMiddlawares();
 		this.useRoutes();
 		this.useExceptionFilters();
 		this.loggerService.log(`server has been started on ${this.port} port`);

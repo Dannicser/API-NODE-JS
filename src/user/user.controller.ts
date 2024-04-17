@@ -7,6 +7,8 @@ import { IUserController } from './user.controller.interface';
 import { ILogger } from '../logger/logger.interface';
 
 import 'reflect-metadata';
+import { UserLoginDto } from './dto/user-login.dto';
+import { UserRegisterDto } from './dto/user-register.dto';
 
 @injectable() // и тот класс от коротого экстендимся
 // сначала extends потом implements
@@ -17,24 +19,24 @@ export class UserController extends BaseController implements IUserController {
 		this.bindRoutes([
 			{
 				path: '/register',
-				method: 'get',
+				method: 'post',
 				func: this.register,
 			},
 			{
 				path: '/login',
-				method: 'get',
+				method: 'post',
 				func: this.login,
 			},
 		]);
 	}
 
-	login(req: Request, res: Response, next: NextFunction): void {
+	login(req: Request<{}, {}, UserLoginDto>, res: Response, next: NextFunction): void {
 		// this.ok(res, "login");
 
 		next(new HTTPError(404, 'user has not been found'));
 	}
 
-	register(req: Request, res: Response, next: NextFunction): void {
+	register(req: Request<{}, {}, UserRegisterDto>, res: Response, next: NextFunction): void {
 		this.ok(res, 'register');
 	}
 }
