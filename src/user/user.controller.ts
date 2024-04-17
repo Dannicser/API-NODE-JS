@@ -9,12 +9,15 @@ import { ILogger } from '../logger/logger.interface';
 import 'reflect-metadata';
 import { UserLoginDto } from './dto/user-login.dto';
 import { UserRegisterDto } from './dto/user-register.dto';
-import { User } from './user.entity';
+import { IUserService } from './user.service.interface';
 
 @injectable() // и тот класс от коротого экстендимся
 // сначала extends потом implements
 export class UserController extends BaseController implements IUserController {
-	constructor(@inject(TYPES.ILogger) private loggerService: ILogger) {
+	constructor(
+		@inject(TYPES.ILogger) private loggerService: ILogger,
+		@inject(TYPES.IUserService) private userService: IUserService,
+	) {
 		super(loggerService); // если экстендим всегда вызываем
 
 		this.bindRoutes([
@@ -32,16 +35,16 @@ export class UserController extends BaseController implements IUserController {
 	}
 
 	login(req: Request<{}, {}, UserLoginDto>, res: Response, next: NextFunction): void {
-		// this.ok(res, "login");
-
 		next(new HTTPError(404, 'user has not been found'));
 	}
 
 	async register(req: Request<{}, {}, UserRegisterDto>, res: Response, next: NextFunction): Promise<void> {
-		const newUser = new User(req.body.email, req.body.name);
+		const result = await this.userService.createUser(req.body);
 
-		await newUser.setPassword(req.body.password);
+		if (!result) {
+			return next(new HTTPError(422, 'user has already existed'));
+		}
 
-		this.ok(res, newUser);
+		this.ok(res, result);
 	}
 }
