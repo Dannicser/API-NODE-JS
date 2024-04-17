@@ -10,6 +10,7 @@ import 'reflect-metadata';
 import { UserLoginDto } from './dto/user-login.dto';
 import { UserRegisterDto } from './dto/user-register.dto';
 import { IUserService } from './user.service.interface';
+import { ValidateMiddleware } from '../common/validate.middleware';
 
 @injectable() // и тот класс от коротого экстендимся
 // сначала extends потом implements
@@ -25,7 +26,7 @@ export class UserController extends BaseController implements IUserController {
 				path: '/register',
 				method: 'post',
 				func: this.register,
-				middlewares: [],
+				middlewares: [new ValidateMiddleware(UserRegisterDto)],
 			},
 			{
 				path: '/login',
