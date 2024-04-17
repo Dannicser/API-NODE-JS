@@ -9,6 +9,7 @@ import { ILogger } from '../logger/logger.interface';
 import 'reflect-metadata';
 import { UserLoginDto } from './dto/user-login.dto';
 import { UserRegisterDto } from './dto/user-register.dto';
+import { User } from './user.entity';
 
 @injectable() // и тот класс от коротого экстендимся
 // сначала extends потом implements
@@ -36,7 +37,11 @@ export class UserController extends BaseController implements IUserController {
 		next(new HTTPError(404, 'user has not been found'));
 	}
 
-	register(req: Request<{}, {}, UserRegisterDto>, res: Response, next: NextFunction): void {
-		this.ok(res, 'register');
+	async register(req: Request<{}, {}, UserRegisterDto>, res: Response, next: NextFunction): Promise<void> {
+		const newUser = new User(req.body.email, req.body.name);
+
+		await newUser.setPassword(req.body.password);
+
+		this.ok(res, newUser);
 	}
 }
