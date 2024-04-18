@@ -11,6 +11,8 @@ import { IExceptionFilter } from './errors/exeption.filter.interface';
 import 'reflect-metadata';
 import { IUserService } from './user/user.service.interface';
 import { UserService } from './user/user.service';
+import { IConfigService } from './config/config.service.interface';
+import { ConfigService } from './config/config.service';
 
 interface IBootstrapReturn {
 	app: App;
@@ -23,10 +25,11 @@ interface IBootstrapReturn {
 
 // так можно объединять логические куски приложения
 export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
-	bind<ILogger>(TYPES.ILogger).to(LoggerService); // TYPES.ILogger отдат LoggerService при инжекте
+	bind<ILogger>(TYPES.ILogger).to(LoggerService).inSingletonScope(); // TYPES.ILogger отдат LoggerService при инжекте
 	bind<IExceptionFilter>(TYPES.IExeptionFilter).to(ExeptionFilters);
 	bind<IUserController>(TYPES.IUserController).to(UserController);
 	bind<IUserService>(TYPES.IUserService).to(UserService);
+	bind<IConfigService>(TYPES.IConfigService).to(ConfigService).inSingletonScope(); // синглтон - позволяет создать один инстанс класса и потом шарить его во всех местах где инжектим
 	bind<App>(TYPES.App).to(App);
 });
 
