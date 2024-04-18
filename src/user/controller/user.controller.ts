@@ -1,16 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
-import { BaseController } from '../common/base.controller';
-import { HTTPError } from '../errors/http-error.class';
+import { BaseController } from '../../common/base.controller';
+import { HTTPError } from '../../errors/http-error.class';
 import { inject, injectable } from 'inversify';
-import { TYPES } from '../types';
+import { TYPES } from '../../types';
 import { IUserController } from './user.controller.interface';
-import { ILogger } from '../logger/logger.interface';
+import { ILogger } from '../../logger/logger.interface';
+import { UserLoginDto } from '../dto/user-login.dto';
+import { UserRegisterDto } from '../dto/user-register.dto';
+import { IUserService } from '../service/user.service.interface';
+import { ValidateMiddleware } from '../../common/validate.middleware';
 
 import 'reflect-metadata';
-import { UserLoginDto } from './dto/user-login.dto';
-import { UserRegisterDto } from './dto/user-register.dto';
-import { IUserService } from './user.service.interface';
-import { ValidateMiddleware } from '../common/validate.middleware';
 
 @injectable() // и тот класс от коротого экстендимся
 // сначала extends потом implements
@@ -37,8 +37,14 @@ export class UserController extends BaseController implements IUserController {
 		]);
 	}
 
-	login(req: Request<{}, {}, UserLoginDto>, res: Response, next: NextFunction): void {
-		next(new HTTPError(404, 'user has not been found'));
+	async login(req: Request<{}, {}, UserLoginDto>, res: Response, next: NextFunction): Promise<void> {
+		const result = await this.userService.validateUser(req.body);
+
+		if (!result) {
+			return next(new HTTPError(401, 'wrong login or password'));
+		}
+
+		this.ok(res, {});
 	}
 
 	async register(req: Request<{}, {}, UserRegisterDto>, res: Response, next: NextFunction): Promise<void> {

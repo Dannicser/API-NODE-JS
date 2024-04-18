@@ -1,4 +1,4 @@
-import { hash } from 'bcryptjs';
+import { compare, hash } from 'bcryptjs';
 
 // entity используется для инкапсуляции бизнес логики, которая относится к объекту реального мира
 
@@ -8,7 +8,12 @@ export class User {
 	constructor(
 		private readonly _email: string,
 		private readonly _name: string,
-	) {}
+		private readonly passwordHash?: string,
+	) {
+		if (passwordHash) {
+			this._password = passwordHash;
+		}
+	}
 
 	get email(): string {
 		return this._email;
@@ -24,5 +29,9 @@ export class User {
 
 	public async setPassword(pass: string, salt: string): Promise<void> {
 		this._password = await hash(pass, Number(salt));
+	}
+
+	public async comparePassword(pass: string): Promise<boolean> {
+		return await compare(pass, this._password);
 	}
 }

@@ -2,21 +2,21 @@ import { Container, ContainerModule, interfaces } from 'inversify';
 import { App } from './app';
 import { ExeptionFilters } from './errors/exeption.filter';
 import { LoggerService } from './logger/logger.service';
-import { UserController } from './user/user.controller';
+import { UserController } from './user/controller/user.controller';
 import { ILogger } from './logger/logger.interface';
 import { TYPES } from './types';
-import { IUserController } from './user/user.controller.interface';
+import { IUserController } from './user/controller/user.controller.interface';
 import { IExceptionFilter } from './errors/exeption.filter.interface';
 
-import { IUserService } from './user/user.service.interface';
-import { UserService } from './user/user.service';
+import { IUserService } from './user/service/user.service.interface';
+import { UserService } from './user/service/user.service';
 import { IConfigService } from './config/config.service.interface';
 import { ConfigService } from './config/config.service';
 
 import 'reflect-metadata';
 import { PrismaService } from './database/prisma.service';
-import { IUserRepository } from './user/user.repository.interface';
-import { UserRepositoty } from './user/user.repository';
+import { IUserRepository } from './user/repository/user.repository.interface';
+import { UserRepositoty } from './user/repository/user.repository';
 
 interface IBootstrapReturn {
 	app: App;

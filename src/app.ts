@@ -7,7 +7,7 @@ import { IExceptionFilter } from './errors/exeption.filter.interface';
 import { json } from 'body-parser';
 import { IConfigService } from './config/config.service.interface';
 import { ILogger } from './logger/logger.interface';
-import { IUserController } from './user/user.controller.interface';
+import { IUserController } from './user/controller/user.controller.interface';
 
 import 'reflect-metadata';
 import { PrismaService } from './database/prisma.service';
