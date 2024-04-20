@@ -59,9 +59,9 @@ export class UserService implements IUserService {
 			sign({ email, iat: Math.floor(Date.now() / 1000) }, secret, { algorithm: 'HS256' }, (error, token) => {
 				if (error) {
 					reject(null);
+				} else if (token) {
+					resolve(token);
 				}
-
-				resolve(token as string);
 			});
 		});
 	}
