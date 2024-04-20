@@ -44,6 +44,11 @@ export class UserService implements IUserService {
 		return newUser.comparePassword(password);
 	}
 
+	// мы не должны пропускать слои даже в таком случае
+	public async findUser(email: string): Promise<UserModel | null> {
+		return this.userRepository.find(email);
+	}
+
 	public async generateJWT(email: string, secret: string): Promise<string | null> {
 		try {
 			const access_token = await this.singJWT(email, secret);

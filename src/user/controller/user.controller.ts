@@ -9,9 +9,11 @@ import { UserLoginDto } from '../dto/user-login.dto';
 import { UserRegisterDto } from '../dto/user-register.dto';
 import { IUserService } from '../service/user.service.interface';
 import { ValidateMiddleware } from '../../common/validate.middleware';
+import { IConfigService } from '../../config/config.service.interface';
+import { AuthGuard } from '../../common/auth.guard';
 
 import 'reflect-metadata';
-import { IConfigService } from '../../config/config.service.interface';
+import { UserInfoDto } from '../dto/user-info.dto';
 
 @injectable() // и тот класс от коротого экстендимся
 // сначала extends потом implements
@@ -40,7 +42,7 @@ export class UserController extends BaseController implements IUserController {
 				path: '/info',
 				method: 'get',
 				func: this.info,
-				middlewares: [],
+				middlewares: [new AuthGuard()],
 			},
 		]);
 	}
@@ -72,7 +74,17 @@ export class UserController extends BaseController implements IUserController {
 		this.ok(res, {});
 	}
 
-	async info(req: Request, res: Response, next: NextFunction): Promise<void> {
-		this.ok(res, req.user);
+	async info(req: Request<{}, {}, UserInfoDto>, res: Response, next: NextFunction): Promise<void> {
+		const user = await this.userService.findUser(req.body.email);
+
+		if (!user) {
+			return next(new HTTPError(404, 'user has not beed found'));
+		}
+
+		this.ok(res, {
+			id: user.id,
+			email: user.email,
+			name: user.name,
+		});
 	}
 }

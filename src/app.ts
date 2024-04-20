@@ -3,15 +3,14 @@ import express, { Express } from 'express';
 import { inject, injectable } from 'inversify';
 import { TYPES } from './types';
 import { IExceptionFilter } from './errors/exeption.filter.interface';
-
 import { json } from 'body-parser';
 import { IConfigService } from './config/config.service.interface';
 import { ILogger } from './logger/logger.interface';
 import { IUserController } from './user/controller/user.controller.interface';
+import { AuthMiddleware } from './common/auth.middleware';
+import { PrismaService } from './database/prisma.service';
 
 import 'reflect-metadata';
-import { PrismaService } from './database/prisma.service';
-import { AuthMiddleware } from './common/auth.middleware';
 
 @injectable()
 export class App {

@@ -7,16 +7,15 @@ import { ILogger } from './logger/logger.interface';
 import { TYPES } from './types';
 import { IUserController } from './user/controller/user.controller.interface';
 import { IExceptionFilter } from './errors/exeption.filter.interface';
-
 import { IUserService } from './user/service/user.service.interface';
 import { UserService } from './user/service/user.service';
 import { IConfigService } from './config/config.service.interface';
 import { ConfigService } from './config/config.service';
-
-import 'reflect-metadata';
 import { PrismaService } from './database/prisma.service';
 import { IUserRepository } from './user/repository/user.repository.interface';
 import { UserRepositoty } from './user/repository/user.repository';
+
+import 'reflect-metadata';
 
 interface IBootstrapReturn {
 	app: App;
