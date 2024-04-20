@@ -13,7 +13,6 @@ import { IConfigService } from '../../config/config.service.interface';
 import { AuthGuard } from '../../common/auth.guard';
 
 import 'reflect-metadata';
-import { UserInfoDto } from '../dto/user-info.dto';
 
 @injectable() // и тот класс от коротого экстендимся
 // сначала extends потом implements
@@ -74,8 +73,8 @@ export class UserController extends BaseController implements IUserController {
 		this.ok(res, {});
 	}
 
-	async info(req: Request<{}, {}, UserInfoDto>, res: Response, next: NextFunction): Promise<void> {
-		const user = await this.userService.findUser(req.body.email);
+	async info(req: Request, res: Response, next: NextFunction): Promise<void> {
+		const user = await this.userService.findUser(req.user.email);
 
 		if (!user) {
 			return next(new HTTPError(404, 'user has not beed found'));
